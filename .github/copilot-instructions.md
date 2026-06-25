@@ -1,5 +1,4 @@
 # Copilot Instructions
-oy
 
 ## Proje Yönergeleri
 - Uygulamanın adı artık 'Rechnung' olarak kullanılmalı; 'Örnek' adı yeni değişikliklerde kullanılmamalı.
@@ -13,6 +12,7 @@ oy
 - Kullanıcı, işlemleri durmadan ve onay beklemeden sürdürmemi istiyor; bu yüzden işlemler otomatik olarak ilerlemelidir.
 - Finans ekranında 'kazanılan vergi' ifadesi yerine 'ödenmesi gereken vergi' ifadesini kullan; kartlar optik olarak hizalı olmalı ve küçük pencerede sığmalı.
 - Kullanıcı dağıtım ve kurulum tarafında profesyonel görünen, mümkün olduğunca tamamlanmış bir setup akışı istiyor.
+- Kullanıcı, sürümleme ve güncelleme işlerinde aynı sürümü yeniden yayınlama hatasının tekrarlanmamasını; her yeni güncellemede manifest, setup ve release sürüm numaralarının gerçekten artırılıp birbiriyle uyumlu tutulmasını istiyor.
 
 ### Tarama ve Yazıcı/Tarayıcı Entegrasyonu
 - Uygulamaya WLAN üzerinden bağlı yazıcı/tarayıcılarla uyumlu gelişmiş bir tarama özelliği ekle.
@@ -25,5 +25,6 @@ oy
 
 ## Kaydetme Noktaları
 - Büyük değişikliklerden önce mevcut durumu anı (checkpoint) olarak kaydet; kullanıcı beğenmezse tam olarak bu duruma geri dönebilme imkanı sağla.
+
 ## Bellek
 - Kullanıcı, uygun geliştirme görevlerinde onay istemeden ve araya soru koymadan tüm adımları uygulamamı istiyor.

@@ -7,7 +7,7 @@
         MinHeight="280"
         MinWidth="480"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
+        ResizeMode="CanResizeWithGrip">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -38,18 +38,18 @@
             </ScrollViewer>
         </Border>
 
-        <StackPanel Grid.Row="3"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
+        <WrapPanel Grid.Row="3"
+                   HorizontalAlignment="Right">
             <Button x:Name="CancelButton"
                     Style="{StaticResource SecondaryButtonStyle}"
                     Width="130"
-                    Margin="0,0,10,0"
+                    Margin="0,0,10,10"
                     Click="CancelButton_Click"/>
             <Button x:Name="UpdateButton"
                     Style="{StaticResource PrimaryButtonStyle}"
                     Width="160"
+                    Margin="0,0,0,10"
                     Click="UpdateButton_Click"/>
-        </StackPanel>
+        </WrapPanel>
     </Grid>
 </Window>

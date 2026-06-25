@@ -107,7 +107,7 @@
                                Foreground="{StaticResource AppTextPrimaryBrush}"/>
                     <TextBlock x:Name="AppSubtitleText"
                                Margin="0,4,0,0"
-                               Text="Angebote und Rechnungen in einem klaren, modernen Workspace verwalten."
+                               Text="Angebote und Rechnungen in einem klaren, modernen Workspace verwalten. Update-Test aktiv."
                                FontSize="14"
                                Foreground="{StaticResource AppTextSecondaryBrush}"/>
                 </StackPanel>
@@ -117,8 +117,8 @@
 
         <Grid Grid.Row="1" Margin="22,0,22,22">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.96*"/>
-                <ColumnDefinition Width="1.54*"/>
+                <ColumnDefinition Width="0.98*" MinWidth="360"/>
+                <ColumnDefinition Width="1.52*" MinWidth="520"/>
             </Grid.ColumnDefinitions>
 
             <Border x:Name="SidebarHoverZone"
@@ -530,7 +530,7 @@
                 </Grid>
             </Border>
 
-            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="32,0,4,0" Background="Transparent" BorderThickness="0">
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="32,0,4,0" Background="Transparent" BorderThickness="0">
                 <StackPanel>
                     <GroupBox x:Name="DokumentGroupBox" Header="Rechnung" Margin="0,0,0,12">
                         <Grid Margin="0">
@@ -673,15 +673,15 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <GroupBox x:Name="PositionsGroupBox" Grid.Column="1" Header="Positionen im PDF-Layout bearbeiten" Margin="4,0,32,-6">
+            <GroupBox x:Name="PositionsGroupBox" Grid.Column="1" Header="Positionen im PDF-Layout bearbeiten" Margin="4,0,32,-6" MinWidth="480">
                 <DockPanel Margin="0">
-                    <UniformGrid DockPanel.Dock="Top" Rows="1" Columns="5" Margin="0,0,0,12">
-                        <Button Name="AddFromCatalogButton" Click="AddFromCatalogButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Aus Katalog hinzufügen"/>
-                        <Button Name="AddPositionButton" Click="AddPositionButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Position hinzufügen"/>
-                        <Button Name="RemovePositionButton" Click="RemovePositionButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Auswahl löschen"/>
-                        <Button Name="AciklamaEkleButton" Click="AciklamaEkleButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Hinweis hinzufügen"/>
-                        <Button Name="AciklamaSilButton" Click="AciklamaSilButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Height="40" Content="Hinweis löschen"/>
-                    </UniformGrid>
+                    <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                        <Button Name="AddFromCatalogButton" Click="AddFromCatalogButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,10" MinWidth="150" Height="40" Content="Aus Katalog hinzufügen"/>
+                        <Button Name="AddPositionButton" Click="AddPositionButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,10" MinWidth="140" Height="40" Content="Position hinzufügen"/>
+                        <Button Name="RemovePositionButton" Click="RemovePositionButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,10" MinWidth="140" Height="40" Content="Auswahl löschen"/>
+                        <Button Name="AciklamaEkleButton" Click="AciklamaEkleButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,10" MinWidth="140" Height="40" Content="Hinweis hinzufügen"/>
+                        <Button Name="AciklamaSilButton" Click="AciklamaSilButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,0,10" MinWidth="140" Height="40" Content="Hinweis löschen"/>
+                    </WrapPanel>
 
                     <Border Background="White"
                             BorderBrush="{StaticResource AppBorderBrush}"
@@ -692,6 +692,7 @@
                             <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#16000000"/>
                         </Border.Effect>
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Auto"
                                       Background="Transparent"
                                       BorderThickness="0">
                             <StackPanel>
@@ -709,7 +710,8 @@
 
                                 <Border Background="#00368A"
                                         CornerRadius="12,12,0,0"
-                                        Padding="10,8">
+                                         Padding="10,8"
+                                         MinWidth="680">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="36"/>
@@ -740,7 +742,8 @@
                                                     BorderBrush="#FFE1E6EE"
                                                     BorderThickness="1"
                                                     CornerRadius="0,0,12,12"
-                                                    MouseLeftButtonDown="PositionCard_MouseLeftButtonDown">
+                                                     MouseLeftButtonDown="PositionCard_MouseLeftButtonDown"
+                                                     MinWidth="680">
                                                 <Border.Effect>
                                                     <DropShadowEffect BlurRadius="6" ShadowDepth="0" Opacity="0.03" Color="#14000000"/>
                                                 </Border.Effect>

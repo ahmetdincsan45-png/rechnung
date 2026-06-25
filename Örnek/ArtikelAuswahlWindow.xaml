@@ -22,6 +22,7 @@
         </Grid>
 
         <DataGrid Grid.Row="1" x:Name="ArtikelGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   MouseDoubleClick="ArtikelGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="ArtikelNrColumn" Header="Nr." Binding="{Binding ArtikelNr}" Width="120"/>

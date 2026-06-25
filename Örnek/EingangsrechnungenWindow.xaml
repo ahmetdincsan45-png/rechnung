@@ -33,7 +33,8 @@
             <Button x:Name="RefreshButton" MinWidth="110" MaxWidth="160" Margin="0,0,0,10" Click="Refresh_Click" Content="Aktualisieren"/>
         </WrapPanel>
 
-        <Grid Grid.Row="1">
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <Grid MinWidth="1020">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.95*"/>
                 <ColumnDefinition Width="1.55*"/>
@@ -45,6 +46,7 @@
                           IsReadOnly="True"
                           GridLinesVisibility="Horizontal"
                           HeadersVisibility="Column"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
                           SelectionChanged="InvoicesGrid_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="SupplierColumn" Header="Lieferant" Binding="{Binding Lieferant}" Width="*"/>
@@ -56,7 +58,7 @@
                 </DataGrid>
             </GroupBox>
 
-            <GroupBox x:Name="DetailsGroupBox" Grid.Column="1" Header="Belegdetails">
+            <GroupBox x:Name="DetailsGroupBox" Grid.Column="1" Header="Belegdetails" MinWidth="360">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid Margin="14">
                         <Grid.RowDefinitions>
@@ -146,5 +148,6 @@
                 </ScrollViewer>
             </GroupBox>
         </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>

@@ -20,18 +20,19 @@
             <Button x:Name="EditButton" MinWidth="140" MaxWidth="180" Margin="0,0,0,10" Click="Duzenle_Click" Content="Bearbeiten"/>
         </WrapPanel>
 
-        <UniformGrid Grid.Row="1" Margin="0,0,0,10" Columns="5">
-            <TextBox x:Name="SearchTextBox" Margin="0,0,10,10" MinWidth="120" VerticalContentAlignment="Center" TextChanged="SearchFilter_Changed"/>
-            <ComboBox x:Name="TypeFilterComboBox" Margin="0,0,10,10" MinWidth="120" SelectionChanged="SearchFilter_Changed"/>
-            <ComboBox x:Name="StatusFilterComboBox" Margin="0,0,10,10" MinWidth="120" SelectionChanged="SearchFilter_Changed"/>
-            <DatePicker x:Name="FromDatePicker" Margin="0,0,10,10" MinWidth="110" SelectedDateChanged="SearchFilter_Changed"/>
-            <DatePicker x:Name="ToDatePicker" Margin="0,0,0,10" MinWidth="110" SelectedDateChanged="SearchFilter_Changed"/>
-        </UniformGrid>
+        <WrapPanel Grid.Row="1" Margin="0,0,0,10">
+            <TextBox x:Name="SearchTextBox" Margin="0,0,10,10" MinWidth="160" Width="180" VerticalContentAlignment="Center" TextChanged="SearchFilter_Changed"/>
+            <ComboBox x:Name="TypeFilterComboBox" Margin="0,0,10,10" MinWidth="140" Width="160" SelectionChanged="SearchFilter_Changed"/>
+            <ComboBox x:Name="StatusFilterComboBox" Margin="0,0,10,10" MinWidth="140" Width="160" SelectionChanged="SearchFilter_Changed"/>
+            <DatePicker x:Name="FromDatePicker" Margin="0,0,10,10" MinWidth="130" SelectedDateChanged="SearchFilter_Changed"/>
+            <DatePicker x:Name="ToDatePicker" Margin="0,0,0,10" MinWidth="130" SelectedDateChanged="SearchFilter_Changed"/>
+        </WrapPanel>
 
         <DataGrid Grid.Row="2"
                   x:Name="ArchivGrid"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   PreviewMouseLeftButtonUp="ArchivGrid_PreviewMouseLeftButtonUp">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="TypeColumn" Header="Typ" Binding="{Binding DokumentTyp}" Width="120"/>

@@ -91,7 +91,7 @@ dotnet publish $projectFullPath `
 Write-Host "Publish tamamlandı: $publishFullPath" -ForegroundColor Green
 
 $bundledUpdateSettings = [ordered]@{
-	manifestUrl = $defaultManifestUrl
+	ManifestUrl = $defaultManifestUrl
 } | ConvertTo-Json
 Set-Content -Path $bundledUpdateSettingsPath -Value $bundledUpdateSettings -Encoding UTF8
 

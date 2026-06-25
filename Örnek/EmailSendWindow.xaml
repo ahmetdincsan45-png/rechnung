@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
          Title="E-Mail senden" Height="520" Width="650" MinWidth="420" MinHeight="320" WindowStartupLocation="CenterOwner">
-    <Grid Margin="15">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <Grid Margin="15" MinWidth="380">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -32,4 +33,5 @@
             <Button x:Name="SendButton" MinWidth="110" MaxWidth="160" Margin="0,0,0,10" Click="Send_Click" Content="Senden"/>
         </WrapPanel>
     </Grid>
+    </ScrollViewer>
 </Window>

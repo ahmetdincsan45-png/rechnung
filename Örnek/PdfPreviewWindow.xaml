@@ -20,7 +20,9 @@
         </DockPanel>
 
         <Border Grid.Row="1" Margin="10" Background="#F0F0F0" BorderBrush="#DDD" BorderThickness="1">
-            <wv2:WebView2 x:Name="PdfView" />
+            <Grid MinWidth="320" MinHeight="240">
+                <wv2:WebView2 x:Name="PdfView" />
+            </Grid>
         </Border>
     </Grid>
 </Window>
