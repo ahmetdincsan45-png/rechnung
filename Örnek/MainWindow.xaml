@@ -1,0 +1,866 @@
+﻿<Window x:Class="Örnek.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Örnek"
+        mc:Ignorable="d"
+        Title="Rechnungsprogramm" Height="800" Width="1200" WindowState="Maximized"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        RenderOptions.ClearTypeHint="Enabled">
+    <Window.Resources>
+        <Style x:Key="CenteredColumnHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CenteredCellTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CenteredCellEditTextStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CenteredComboDisplayStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CenteredComboEditStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="IsEditable" Value="True"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="PdfEditorCellTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#FFFFFFFF"/>
+            <Setter Property="BorderBrush" Value="#FFD9DFE8"/>
+        </Style>
+
+        <Style x:Key="PdfEditorComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#FFFFFFFF"/>
+            <Setter Property="BorderBrush" Value="#FFD9DFE8"/>
+        </Style>
+
+        <Style x:Key="PdfEditorNoteTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource PdfEditorCellTextBoxStyle}">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="MinHeight" Value="44"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="PositionToolbarButtonStyle" TargetType="Button" BasedOn="{StaticResource AppButtonStyle}">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource AppBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Margin="22,12,22,12"
+                Background="{StaticResource AppCardBrush}"
+                BorderBrush="{StaticResource AppBorderBrush}"
+                BorderThickness="1.2"
+                CornerRadius="22"
+                Padding="24,14">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Opacity="0.03" Color="#14000000"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <TextBlock x:Name="AppTitleText"
+                               Text="Rechnungsprogramm"
+                               FontSize="28"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource AppTextPrimaryBrush}"/>
+                    <TextBlock x:Name="AppSubtitleText"
+                               Margin="0,4,0,0"
+                               Text="Angebote und Rechnungen in einem klaren, modernen Workspace verwalten."
+                               FontSize="14"
+                               Foreground="{StaticResource AppTextSecondaryBrush}"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="22,0,22,22">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.96*"/>
+                <ColumnDefinition Width="1.54*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="SidebarHoverZone"
+                    Width="14"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,0"
+                    Background="Transparent"
+                    Panel.ZIndex="8"
+                    MouseEnter="SidebarHoverZone_MouseEnter"/>
+
+            <Border x:Name="SidebarDrawer"
+                    Width="18"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,0"
+                    Background="{StaticResource AppCardBrush}"
+                    BorderBrush="{StaticResource AppBorderBrush}"
+                    BorderThickness="1.2"
+                    CornerRadius="0,16,16,0"
+                    Padding="0"
+                    Panel.ZIndex="9"
+                    MouseEnter="SidebarDrawer_MouseEnter"
+                    MouseLeave="SidebarDrawer_MouseLeave">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="4" ShadowDepth="0" Opacity="0.025" Color="#12000000"/>
+                </Border.Effect>
+                <Grid ClipToBounds="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="{StaticResource AppSurfaceBrush}" CornerRadius="0,18,18,0">
+                        <Border Width="4"
+                                Height="42"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="#FF0F2D6B"
+                                Opacity="0.55"
+                                CornerRadius="2">
+                            <Border.Triggers>
+                                <EventTrigger RoutedEvent="Border.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             From="0.45"
+                                                             To="0.82"
+                                                             Duration="0:0:1.4"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Border.Triggers>
+                        </Border>
+                    </Border>
+
+                    <ScrollViewer x:Name="SidebarContent"
+                                  Grid.Column="1"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  Visibility="Collapsed"
+                                  Opacity="0">
+                        <StackPanel Margin="18,18,18,18"
+                                    Width="224"
+                                    HorizontalAlignment="Left">
+                            <TextBlock x:Name="SidebarWorkspaceText"
+                                       Text="Arbeitsbereich"
+                                       HorizontalAlignment="Left"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextPrimaryBrush}"/>
+                            <TextBlock x:Name="SidebarWorkspaceSubtitleText"
+                                       Margin="0,4,0,16"
+                                       Text="Schnellzugriff und Dokumentstatus"
+                                        HorizontalAlignment="Left"
+                                       FontSize="12"
+                                       Foreground="{StaticResource AppTextSecondaryBrush}"/>
+
+                            <Border Width="208"
+                                    HorizontalAlignment="Left"
+                                    Background="{StaticResource AppSurfaceBrush}"
+                                    BorderBrush="{StaticResource AppBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="16"
+                                    Padding="14,12"
+                                    Margin="0,0,0,18">
+                                <StackPanel>
+                                    <TextBlock x:Name="SidebarActiveDocumentText"
+                                               Text="Aktives Dokument"
+                                               FontSize="12"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource AppTextSecondaryBrush}"/>
+                                    <TextBlock Margin="0,8,0,0"
+                                               Text="{Binding DokumentTyp}"
+                                               FontSize="20"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource AppTextPrimaryBrush}"/>
+                                    <TextBlock Margin="0,6,0,0"
+                                               Text="{Binding Rechnungsnummer, TargetNullValue=Noch keine Nummer}"
+                                               FontSize="13"
+                                               Foreground="{StaticResource AppTextPrimaryBrush}"/>
+                                    <TextBlock Margin="0,2,0,0"
+                                               Text="{Binding Empfänger.Firmenname, TargetNullValue=Kein Kunde ausgewählt}"
+                                               FontSize="13"
+                                               Foreground="{StaticResource AppTextSecondaryBrush}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock x:Name="SidebarQuickActionsText"
+                                       Text="Schnellaktionen"
+                                       HorizontalAlignment="Left"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextSecondaryBrush}"
+                                       Margin="0,0,0,10"/>
+                            <Button Click="NeueAngebotMenu_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE160;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarNewOfferText" Grid.Column="1" Text="Neues Angebot" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="NeueRechnungMenu_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE130;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarNewInvoiceText" Grid.Column="1" Text="Neue Rechnung" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="AngebotToRechnungMenu_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE8AB;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarConvertOfferText" Grid.Column="1" Text="Angebot in Rechnung umwandeln" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="EmailGonder_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE715;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarSendEmailText" Grid.Column="1" Text="Per E-Mail senden" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="Arsiv_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,18" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarOpenArchiveText" Grid.Column="1" Text="Archiv öffnen" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+
+                            <TextBlock x:Name="SidebarTextsSectionText"
+                                       Text="Texte"
+                                       HorizontalAlignment="Left"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextSecondaryBrush}"
+                                       Margin="0,0,0,10"/>
+                             <CheckBox x:Name="SidebarProfessionellerRechnungstextCheckBox"
+                                       Style="{StaticResource SidebarMenuCheckBoxStyle}"
+                                      Margin="0,0,0,10"
+                                      Checked="ProfessionellerRechnungstextMenu_Click"
+                                      Unchecked="ProfessionellerRechnungstextMenu_Click"
+                                      Content="Professioneller Rechnungstext"/>
+                            <Button Click="AngebotMetinleri_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE70B;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarOfferTextsText" Grid.Column="1" Text="Angebotstexte" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+
+                            <TextBlock x:Name="SidebarManagementSectionText"
+                                       Text="Verwaltung"
+                                       HorizontalAlignment="Left"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextSecondaryBrush}"
+                                       Margin="0,0,0,10"/>
+                            <Button Click="FirmaBilgileri_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarCompanyDataText" Grid.Column="1" Text="Firmendaten" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="Artikelstamm_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE14C;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarCatalogText" Grid.Column="1" Text="Leistungskatalog / Artikelstamm" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="Musteriler_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE716;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarCustomersText" Grid.Column="1" Text="Kunden" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="Eingangsrechnungen_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE8A5;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarIncomingInvoicesText" Grid.Column="1" Text="Eingangsrechnungen" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="EmailAyarlar_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,18" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE713;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarEmailSettingsText" Grid.Column="1" Text="E-Mail-Einstellungen" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="FinanzDashboard_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,18" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarFinanceDashboardText" Grid.Column="1" Text="Finanzübersicht" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+
+                            <TextBlock x:Name="SidebarMoreSectionText"
+                                       Text="Mehr"
+                                       HorizontalAlignment="Left"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextSecondaryBrush}"
+                                       Margin="0,0,0,10"/>
+                            <TextBlock x:Name="LanguageSectionText"
+                                       Text="Sprache"
+                                       HorizontalAlignment="Left"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextSecondaryBrush}"
+                                       Margin="0,0,0,10"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                                <TextBlock x:Name="LanguageLabelText"
+                                           Width="102"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource AppTextPrimaryBrush}"
+                                           Text="Oberflächensprache"/>
+                                <ComboBox x:Name="LanguageComboBox"
+                                          Width="110"
+                                          SelectionChanged="LanguageComboBox_SelectionChanged">
+                                    <ComboBoxItem Tag="de" Content="Deutsch"/>
+                                    <ComboBoxItem Tag="tr" Content="Türkçe"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <Button Click="KaydetmeKlasoruSec_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE105;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarSaveFolderText" Grid.Column="1" Text="Speicherordner auswählen" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="ArsivKlasoruSec_Click" Style="{StaticResource SidebarMenuButtonStyle}" Margin="0,0,0,10" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarArchiveFolderText" Grid.Column="1" Text="Archivordner auswählen" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button Click="Cikis_Click" Style="{StaticResource SidebarMenuButtonStyle}" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE8AC;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarExitText" Grid.Column="1" Text="Beenden" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <Border x:Name="RightSidebarHoverZone"
+                    Grid.Column="1"
+                    Width="14"
+                    HorizontalAlignment="Right"
+                    Margin="0"
+                    Background="Transparent"
+                    Panel.ZIndex="8"
+                    MouseEnter="RightSidebarHoverZone_MouseEnter"/>
+
+            <Border x:Name="RightSidebarDrawer"
+                    Grid.Column="1"
+                    Width="18"
+                    HorizontalAlignment="Right"
+                    Margin="0"
+                    Background="{StaticResource AppCardBrush}"
+                    BorderBrush="{StaticResource AppBorderBrush}"
+                    BorderThickness="1.2"
+                    CornerRadius="16,0,0,16"
+                    Padding="0"
+                    Panel.ZIndex="9"
+                    MouseEnter="RightSidebarDrawer_MouseEnter"
+                    MouseLeave="RightSidebarDrawer_MouseLeave">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="4" ShadowDepth="0" Opacity="0.025" Color="#12000000"/>
+                </Border.Effect>
+                <Grid ClipToBounds="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="18"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ScrollViewer x:Name="RightSidebarContent"
+                                  Grid.Column="0"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  Visibility="Collapsed"
+                                  Opacity="0">
+                        <StackPanel Margin="18,18,18,18"
+                                    Width="196"
+                                    HorizontalAlignment="Left">
+                            <TextBlock x:Name="RightSidebarActionsTitleText"
+                                       Text="Dokumentaktionen"
+                                       HorizontalAlignment="Left"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextPrimaryBrush}"/>
+
+                            <Button Name="RechnungButton" Click="RechnungButton_Click"
+                                    Style="{StaticResource SuccessButtonStyle}"
+                                    HorizontalContentAlignment="Center"
+                                     Width="196" Height="46" Content="Rechnung" Margin="0,14,0,10"/>
+                            <Button Name="GenerierenButton" Click="GenerierenButton_Click"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="196" Height="46" Content="Rechnung Generieren" Margin="0,0,0,10"/>
+                            <Button Name="ExportButton" Click="ExportButton_Click"
+                                    Style="{StaticResource WarningButtonStyle}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="196" Height="46" Content="Speichern" Margin="0,0,0,10"/>
+                            <Button Name="AngebotButton" Click="AngebotButton_Click"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="196" Height="46" Content="Angebot" Margin="0,0,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Border Grid.Column="1" Background="{StaticResource AppSurfaceBrush}" CornerRadius="18,0,0,18">
+                        <Border Width="4"
+                                Height="42"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="#FF0F2D6B"
+                                Opacity="0.55"
+                                CornerRadius="2">
+                            <Border.Triggers>
+                                <EventTrigger RoutedEvent="Border.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             From="0.45"
+                                                             To="0.82"
+                                                             Duration="0:0:1.4"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Border.Triggers>
+                        </Border>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="32,0,4,0" Background="Transparent" BorderThickness="0">
+                <StackPanel>
+                    <GroupBox x:Name="DokumentGroupBox" Header="Rechnung" Margin="0,0,0,12">
+                        <Grid Margin="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="NummerLabel" Grid.Row="0" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Nummer:"/>
+                            <TextBox x:Name="InvoiceNumberTextBox"
+                                     Grid.Row="0"
+                                     Grid.Column="1"
+                                     Margin="0,0,0,6"
+                                     TextChanged="InvoiceNumberTextBox_TextChanged"
+                                     Text="{Binding Rechnungsnummer, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock x:Name="DatumLabel" Grid.Row="1" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Rechnungsdatum:"/>
+                            <DatePicker Grid.Row="1" Grid.Column="1" Margin="0,0,0,6" SelectedDate="{Binding Rechnungsdatum, Mode=TwoWay}"/>
+
+                            <TextBlock x:Name="LeistungsdatumLabel" Grid.Row="2" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Leistungsdatum:"/>
+                            <DatePicker x:Name="LeistungsdatumDatePicker" Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" SelectedDate="{Binding Leistungsdatum, Mode=TwoWay}"/>
+
+                             <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Steuernummer:"/>
+                             <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Steuernummer, UpdateSourceTrigger=PropertyChanged}"/>
+
+                             <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="USt-IdNr:"/>
+                             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding UstIdNr, UpdateSourceTrigger=PropertyChanged}"/>
+
+                             <CheckBox x:Name="SmallBusinessCheckBox" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0"
+                                      IsChecked="{Binding IstKleinunternehmer, Mode=TwoWay}"
+                                      Checked="Kleinunternehmer_CheckedChanged"
+                                      Unchecked="Kleinunternehmer_CheckedChanged"
+                                      Content="Kleinunternehmerregelung (§19 UStG) – keine Umsatzsteuer ausweisen"/>
+
+                             <TextBlock x:Name="ObjektLabel" Grid.Row="6" Grid.Column="0" Margin="0,10,10,0" VerticalAlignment="Top" Text="Objekt:"/>
+                            <TextBox Grid.Row="6" Grid.Column="1" Margin="0,10,0,0"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="48"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Text="{Binding Objektname, UpdateSourceTrigger=PropertyChanged}" />
+
+                             <StackPanel x:Name="LieferzeitPanel" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,10,0,0" Visibility="Collapsed">
+                                <TextBlock x:Name="LieferzeitLabel" Margin="0,0,10,0" VerticalAlignment="Center" Text="Lieferzeit:"/>
+                                <TextBox Width="260" Text="{Binding Lieferzeit, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox x:Name="RecipientGroupBox" Header="Empfänger" Margin="0,0,0,12">
+                        <Grid Margin="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="CustomerLabel" Grid.Row="0" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Kunde:"/>
+                            <ComboBox x:Name="KundeComboBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,6" SelectionChanged="KundeComboBox_SelectionChanged"/>
+
+                            <TextBlock x:Name="NameCompanyLabel" Grid.Row="1" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Name/Firma:"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Empfänger.Firmenname, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock x:Name="StreetLabel" Grid.Row="2" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Straße:"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Empfänger.Strasse, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock x:Name="HouseNumberLabel" Grid.Row="3" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Hausnr.:"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Empfänger.Hausnummer, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock x:Name="PostalCodeLabel" Grid.Row="4" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="PLZ:"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Empfänger.Postleitzahl, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock x:Name="CityLabel" Grid.Row="5" Grid.Column="0" Margin="0,0,10,6" VerticalAlignment="Center" Text="Stadt:"/>
+                            <TextBox Grid.Row="5" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Empfänger.Stadt, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock x:Name="RecipientEmailLabel" Grid.Row="6" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="E-Mail:"/>
+                            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Empfänger.Email, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox x:Name="LinkedReceiptsGroupBox" Header="Zugeordnete Belege" Margin="0,12,0,0">
+                        <StackPanel>
+                            <WrapPanel Margin="0,0,0,10">
+                                <Button x:Name="AssignReceiptButton"
+                                        Width="220"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,0,10,10"
+                                        Click="AssignReceiptButton_Click"
+                                        Content="Beleg zu dieser Rechnung zuordnen"/>
+                                <Button x:Name="OpenLinkedReceiptButton"
+                                        Width="150"
+                                        Margin="0,0,10,10"
+                                        Click="OpenLinkedReceiptButton_Click"
+                                        Content="Beleg öffnen"/>
+                                <Button x:Name="RemoveLinkedReceiptButton"
+                                        Width="170"
+                                        Margin="0,0,0,10"
+                                        Click="RemoveLinkedReceiptButton_Click"
+                                        Content="Zuordnung entfernen"/>
+                            </WrapPanel>
+
+                            <DataGrid x:Name="LinkedReceiptsGrid"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                       SelectionMode="Single"
+                                      Height="180">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn x:Name="LinkedReceiptSupplierColumn" Header="Lieferant" Binding="{Binding Lieferant}" Width="*"/>
+                                    <DataGridTextColumn x:Name="LinkedReceiptDateColumn" Header="Datum" Binding="{Binding Rechnungsdatum, StringFormat=dd.MM.yyyy}" Width="110"/>
+                                    <DataGridTextColumn x:Name="LinkedReceiptGrossColumn" Header="Brutto" Binding="{Binding Brutto, StringFormat=N2}" Width="110"/>
+                                    <DataGridTextColumn x:Name="LinkedReceiptNumberColumn" Header="Rechnungsnr." Binding="{Binding Rechnungsnummer}" Width="140"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <TextBlock x:Name="LinkedReceiptsInfoText"
+                                       Margin="0,8,0,0"
+                                       Foreground="{StaticResource AppTextSecondaryBrush}"
+                                       Text="Hier sehen Sie alle Eingangsbelege, die der aktuellen Rechnung zugeordnet sind."/>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+
+            <GroupBox x:Name="PositionsGroupBox" Grid.Column="1" Header="Positionen im PDF-Layout bearbeiten" Margin="4,0,32,-6">
+                <DockPanel Margin="0">
+                    <UniformGrid DockPanel.Dock="Top" Rows="1" Columns="5" Margin="0,0,0,12">
+                        <Button Name="AddFromCatalogButton" Click="AddFromCatalogButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Aus Katalog hinzufügen"/>
+                        <Button Name="AddPositionButton" Click="AddPositionButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Position hinzufügen"/>
+                        <Button Name="RemovePositionButton" Click="RemovePositionButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Auswahl löschen"/>
+                        <Button Name="AciklamaEkleButton" Click="AciklamaEkleButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Margin="0,0,10,0" Height="40" Content="Hinweis hinzufügen"/>
+                        <Button Name="AciklamaSilButton" Click="AciklamaSilButton_Click" Style="{StaticResource PositionToolbarButtonStyle}" Height="40" Content="Hinweis löschen"/>
+                    </UniformGrid>
+
+                    <Border Background="White"
+                            BorderBrush="{StaticResource AppBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="18"
+                            Padding="24">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#16000000"/>
+                        </Border.Effect>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      Background="Transparent"
+                                      BorderThickness="0">
+                            <StackPanel>
+                                <TextBlock x:Name="PositionsTitleText" Text="POSITIONEN"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#00368A"/>
+                                <TextBlock x:Name="PositionsInfoText" Margin="0,6,0,18"
+                                           Text="Die Bearbeitung erfolgt auf dieser weißen Seite; das erzeugte PDF verwendet dieselben Daten."
+                                           FontSize="12"
+                                            TextAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                           Foreground="{StaticResource AppTextSecondaryBrush}"/>
+
+                                <Border Background="#00368A"
+                                        CornerRadius="12,12,0,0"
+                                        Padding="10,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="36"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="78"/>
+                                            <ColumnDefinition Width="92"/>
+                                            <ColumnDefinition Width="104"/>
+                                            <ColumnDefinition Width="90"/>
+                                            <ColumnDefinition Width="104"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="#" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="Beschreibung" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="Menge" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="3" Text="Einheit" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="4" Text="Einzelpreis" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="5" Text="MwSt.%" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="6" Text="Gesamt" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <ItemsControl ItemsSource="{Binding Positionen}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,0,5"
+                                                    Padding="6"
+                                                    Background="#FFFFFFFF"
+                                                    BorderBrush="#FFE1E6EE"
+                                                    BorderThickness="1"
+                                                    CornerRadius="0,0,12,12"
+                                                    MouseLeftButtonDown="PositionCard_MouseLeftButtonDown">
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="0" Opacity="0.03" Color="#14000000"/>
+                                                </Border.Effect>
+                                                <StackPanel>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="36"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="78"/>
+                                                            <ColumnDefinition Width="92"/>
+                                                            <ColumnDefinition Width="104"/>
+                                                            <ColumnDefinition Width="90"/>
+                                                            <ColumnDefinition Width="104"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <TextBox Grid.Column="0"
+                                                                 Style="{StaticResource PdfEditorCellTextBoxStyle}"
+                                                                 Margin="0,0,8,0"
+                                                                 GotFocus="PositionEditor_GotFocus"
+                                                                 Text="{Binding Nummer, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                        <TextBox Grid.Column="1"
+                                                                 Style="{StaticResource PdfEditorCellTextBoxStyle}"
+                                                                 Margin="0,0,10,0"
+                                                                 AcceptsReturn="True"
+                                                                 TextWrapping="Wrap"
+                                                                 MinHeight="32"
+                                                                 GotFocus="PositionEditor_GotFocus"
+                                                                 Text="{Binding Beschreibung, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                        <TextBox Grid.Column="2"
+                                                                 Style="{StaticResource PdfEditorCellTextBoxStyle}"
+                                                                 Margin="0,0,10,0"
+                                                                 GotFocus="PositionEditor_GotFocus"
+                                                                 Text="{Binding Menge, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FlexibleDecimalConverter}, ConverterParameter=0.##}"/>
+
+                                                        <ComboBox Grid.Column="3"
+                                                                  Style="{StaticResource PdfEditorComboBoxStyle}"
+                                                                  Margin="0,0,10,0"
+                                                                  ItemsSource="{StaticResource Einheiten}"
+                                                                  IsEditable="True"
+                                                                  GotFocus="PositionEditor_GotFocus"
+                                                                  Text="{Binding Einheit, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                        <TextBox Grid.Column="4"
+                                                                 Style="{StaticResource PdfEditorCellTextBoxStyle}"
+                                                                 Margin="0,0,10,0"
+                                                                 GotFocus="PositionEditor_GotFocus"
+                                                                 Text="{Binding EinzelPreis, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FlexibleDecimalConverter}, ConverterParameter=N2}"/>
+
+                                                        <TextBox Grid.Column="5"
+                                                                 Style="{StaticResource PdfEditorCellTextBoxStyle}"
+                                                                 Margin="0,0,10,0"
+                                                                 GotFocus="PositionEditor_GotFocus"
+                                                                 Text="{Binding Steuersatz, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FlexibleDecimalConverter}, ConverterParameter=0.##}"/>
+
+                                                        <Border Grid.Column="6"
+                                                                Background="#FFF7F9FC"
+                                                                BorderBrush="#FFD9DFE8"
+                                                                BorderThickness="1"
+                                                                CornerRadius="10"
+                                                                Padding="8,6">
+                                                            <TextBlock HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       FontWeight="SemiBold"
+                                                                       Text="{Binding Betrag, StringFormat=N2}"/>
+                                                        </Border>
+                                                    </Grid>
+
+                                                    <StackPanel Margin="46,6,0,0">
+                                                        <TextBlock Text="Positionsnotiz"
+                                                                   FontSize="11"
+                                                                   FontWeight="SemiBold"
+                                                                   TextAlignment="Left"
+                                                                   HorizontalAlignment="Left"
+                                                                   Foreground="{StaticResource AppTextSecondaryBrush}"/>
+                                                        <TextBox Margin="0,6,0,0"
+                                                                 Style="{StaticResource PdfEditorNoteTextBoxStyle}"
+                                                                 GotFocus="PositionEditor_GotFocus"
+                                                                 Text="{Binding Notiz, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Border Margin="0,10,0,0"
+                                        Padding="16"
+                                        Background="#FFF9FBFE"
+                                        BorderBrush="#FFE0E6EF"
+                                        BorderThickness="1"
+                                        CornerRadius="16"
+                                        HorizontalAlignment="Right">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.04" Color="#14000000"/>
+                                    </Border.Effect>
+                                    <StackPanel MinWidth="240">
+                                        <TextBlock x:Name="TotalsTitleText" Text="Summen" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8" TextAlignment="Center"/>
+                                        <DockPanel Margin="0,0,0,4" LastChildFill="False">
+                                            <TextBlock Text="Netto" DockPanel.Dock="Left"/>
+                                            <TextBlock Text="{Binding GesamtNettoBetrag, StringFormat=N2}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                                        </DockPanel>
+                                        <DockPanel Margin="0,0,0,4" LastChildFill="False">
+                                            <TextBlock Text="Steuer" DockPanel.Dock="Left"/>
+                                            <TextBlock Text="{Binding GesamtSteuer, StringFormat=N2}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="False">
+                                            <TextBlock Text="Brutto" FontWeight="Bold" DockPanel.Dock="Left"/>
+                                            <TextBlock Text="{Binding GesamtBruttoBetrag, StringFormat=N2}" FontWeight="Bold" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </DockPanel>
+            </GroupBox>
+        </Grid>
+
+    </Grid>
+</Window>

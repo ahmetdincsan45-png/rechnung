@@ -1,0 +1,173 @@
+<Window x:Class="Örnek.FinanzDashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+         Title="Finanzübersicht" Height="720" Width="1120" MinHeight="560" MinWidth="700" WindowStartupLocation="CenterOwner"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        RenderOptions.ClearTypeHint="Enabled">
+    <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
+        <Grid Margin="14" Width="1120" MinHeight="620">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="HeaderText" Text="Finanzübersicht" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,12" TextWrapping="Wrap"/>
+
+            <UniformGrid Grid.Row="1" Margin="0,0,0,10" Columns="5" Rows="1">
+                <Border Margin="0,0,10,10" Padding="12,10" MinHeight="76" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="TotalInvoiceAmountTitleText" Text="Gesamtsumme aller Rechnungen" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="11.5" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.TotalInvoiceAmount, StringFormat=N2}" FontSize="18" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,0,10,10" Padding="12,10" MinHeight="76" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="OpenReceivablesTitleText" Text="Offene Forderungen" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="11.5" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.OpenReceivables, StringFormat=N2}" FontSize="18" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,0,10,10" Padding="12,10" MinHeight="76" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="LinkedReceiptTotalTitleText" Text="{Binding LinkedReceiptTotalTitle}" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="11" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.LinkedReceiptTotal, StringFormat=N2}" FontSize="18" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,0,10,10" Padding="12,10" MinHeight="76" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="PaidRevenueTaxTitleText" Text="20% von bezahlt" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="11.5" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.PaidRevenueTaxEstimate, StringFormat=N2}" FontSize="18" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,0,0,10" Padding="12,10" MinHeight="76" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="TotalPrincipalTaxTitleText" Text="Zu zahlende Steuer 20% vom Nettobetrag" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="11" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.TotalPrincipalTaxEstimate, StringFormat=N2}" FontSize="18" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Grid Grid.Row="2" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.8*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Margin="0,0,10,10" Padding="12" MinHeight="128" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="SelectedInvoiceTitleText" Text="Ausgewählte Rechnung" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" TextWrapping="Wrap"/>
+                        <Grid Margin="0,6,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock x:Name="SelectedCustomerLabelText" Grid.Row="0" Text="Kunde" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" Margin="0,0,8,6" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedInvoiceCustomer}" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,3"/>
+
+                            <TextBlock x:Name="SelectedDateLabelText" Grid.Row="1" Text="Datum" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" Margin="0,0,8,6" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedInvoiceDate}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,3"/>
+
+                            <TextBlock x:Name="SelectedNumberLabelText" Grid.Row="2" Text="Rechnungsnummer" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" Margin="0,0,8,6" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedInvoiceNumber}" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,3"/>
+
+                            <TextBlock x:Name="SelectedAmountLabelText" Grid.Row="3" Text="Betrag" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" Margin="0,0,8,0" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedInvoiceAmount, StringFormat=N2}" FontSize="18" FontWeight="SemiBold"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Margin="0,0,10,10" Padding="12" MinHeight="128" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="SelectedInvoiceAmountCardTitleText" Text="Betrag aktuell" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,8,0,0" Text="{Binding SelectedInvoiceAmount, StringFormat=N2}" FontSize="22" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Margin="0,0,0,10" Padding="12" MinHeight="128" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12" Visibility="{Binding SelectedInvoiceTaxVisibility}">
+                    <StackPanel>
+                        <TextBlock x:Name="SelectedInvoiceTaxTitleText" Text="20% Steuer aktuell" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,8,0,0" Text="{Binding SelectedInvoiceTaxAmount, StringFormat=N2}" FontSize="22" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <UniformGrid Grid.Row="3" Margin="0,0,0,10" Columns="3" Rows="1">
+                <Border Margin="0,0,10,10" Padding="12,10" MinHeight="82" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="InvoiceCountTitleText" Text="Rechnungen" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.InvoiceCount}" FontSize="20" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,0,10,10" Padding="12,10" MinHeight="82" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="PaidCountTitleText" Text="Bezahlt" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.PaidInvoiceCount}" FontSize="20" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,0,0,10" Padding="12,10" MinHeight="82" Background="{StaticResource AppCardBrush}" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock x:Name="IncomingCountTitleText" Text="Eingangsbelege" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Summary.IncomingInvoiceCount}" FontSize="20" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Grid Grid.Row="4" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="MarkOpenButton" Grid.Column="0" MinWidth="170" MaxWidth="220" Margin="0,0,12,0" Padding="18,10" Click="MarkOpenButton_Click" Content="Als offen markieren"/>
+                <Button x:Name="MarkPaidButton" Grid.Column="1" MinWidth="180" MaxWidth="230" Margin="0,0,12,0" Padding="18,10" Click="MarkPaidButton_Click" Content="Als bezahlt markieren"/>
+            </Grid>
+
+            <Grid Grid.Row="5" MinHeight="300">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.15*"/>
+                    <ColumnDefinition Width="0.85*"/>
+                </Grid.ColumnDefinitions>
+
+                <GroupBox x:Name="OutgoingGroupBox" Header="Ausgehende Dokumente" Margin="0,0,14,0" MinHeight="300">
+                    <DataGrid x:Name="OutgoingGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Summary.RecentOutgoingDocuments}" SelectionChanged="OutgoingGrid_SelectionChanged" MinHeight="250" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="OutgoingTypeColumn" Header="Typ" Binding="{Binding DokumentTyp}" Width="90"/>
+                            <DataGridTextColumn x:Name="OutgoingNumberColumn" Header="Nr." Binding="{Binding DokumentNummer}" Width="180"/>
+                            <DataGridTextColumn x:Name="OutgoingStatusColumn" Header="Status" Binding="{Binding Status}" Width="110"/>
+                            <DataGridTextColumn x:Name="OutgoingCustomerColumn" Header="Kunde" Binding="{Binding Kunde}" Width="220"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+
+                <GroupBox x:Name="IncomingGroupBox" Grid.Column="1" Header="Eingangsrechnungen" MinHeight="300">
+                    <DataGrid x:Name="IncomingGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Summary.RecentIncomingDocuments}" MinHeight="250" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="IncomingSupplierColumn" Header="Lieferant" Binding="{Binding Lieferant}" Width="190"/>
+                            <DataGridTextColumn x:Name="IncomingNumberColumn" Header="Nr." Binding="{Binding Rechnungsnummer}" Width="140"/>
+                            <DataGridTextColumn x:Name="IncomingGrossColumn" Header="Brutto" Binding="{Binding Brutto, StringFormat=N2}" Width="110"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+    </Viewbox>
+</Window>
+
+    
