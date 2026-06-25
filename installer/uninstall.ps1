@@ -1,10 +1,18 @@
 $ErrorActionPreference = 'Stop'
 $appName = 'Rechnung'
 $targetRoot = Join-Path $env:LOCALAPPDATA $appName
+$targetDir = Join-Path $targetRoot 'app'
 $shortcutPath = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Rechnung.lnk'
 
+if (Test-Path $targetDir) {
+	Remove-Item $targetDir -Recurse -Force
+}
+
 if (Test-Path $targetRoot) {
-	Remove-Item $targetRoot -Recurse -Force
+	$remaining = Get-ChildItem $targetRoot -Force -ErrorAction SilentlyContinue
+	if (-not $remaining) {
+		Remove-Item $targetRoot -Force
+	}
 }
 
 if (Test-Path $shortcutPath) {
@@ -12,3 +20,4 @@ if (Test-Path $shortcutPath) {
 }
 
 Write-Host 'Kaldırma tamamlandı.'
+Write-Host 'Kullanıcı verileri ve arşiv içerikleri korunmuştur.'

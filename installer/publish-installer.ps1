@@ -5,6 +5,8 @@ param(
 	[string]$PublishDir = ".\artifacts\publish",
 	[string]$Version,
 	[string]$UpdateBaseUrl = "",
+	[string]$GitHubOwner = "ahmetdincsan45-png",
+	[string]$GitHubRepo = "rechnung",
 	[switch]$AutoIncrementVersion,
 	[switch]$BuildInstaller
 )
@@ -55,6 +57,17 @@ $publishFullPath = Join-Path $scriptRoot $PublishDir
 $installerOutputDir = Join-Path $scriptRoot "artifacts\setup"
 $updateManifestPath = Join-Path $installerOutputDir "latest.json"
 $bundledUpdateSettingsPath = Join-Path $publishFullPath "update-settings.json"
+$sourceUpdateSettingsPath = Join-Path $scriptRoot "..\Örnek\update-settings.json"
+$sourceUpdateManifestPath = Join-Path $scriptRoot "..\Örnek\updates\update-manifest.json"
+
+$releaseTag = "v$Version"
+$setupFileName = "Rechnung-Setup-$Version.exe"
+$defaultManifestUrl = "https://raw.githubusercontent.com/$GitHubOwner/$GitHubRepo/main/%C3%96rnek/updates/update-manifest.json"
+$defaultDownloadUrl = "https://github.com/$GitHubOwner/$GitHubRepo/releases/download/$releaseTag/$setupFileName"
+
+if ([string]::IsNullOrWhiteSpace($UpdateBaseUrl)) {
+	$UpdateBaseUrl = "https://github.com/$GitHubOwner/$GitHubRepo/releases/download/$releaseTag"
+}
 
 if (Test-Path $publishFullPath) {
 	Remove-Item $publishFullPath -Recurse -Force
@@ -77,14 +90,26 @@ dotnet publish $projectFullPath `
 
 Write-Host "Publish tamamlandı: $publishFullPath" -ForegroundColor Green
 
-if (-not [string]::IsNullOrWhiteSpace($UpdateBaseUrl)) {
-	$manifestUrl = $UpdateBaseUrl.TrimEnd('/') + "/latest.json"
-	$bundledUpdateSettings = [ordered]@{
-		manifestUrl = $manifestUrl
-	} | ConvertTo-Json
-	Set-Content -Path $bundledUpdateSettingsPath -Value $bundledUpdateSettings -Encoding UTF8
-	Write-Host "Update ayarı yazıldı: $bundledUpdateSettingsPath" -ForegroundColor Green
-}
+$bundledUpdateSettings = [ordered]@{
+	manifestUrl = $defaultManifestUrl
+} | ConvertTo-Json
+Set-Content -Path $bundledUpdateSettingsPath -Value $bundledUpdateSettings -Encoding UTF8
+
+$sourceUpdateSettings = [ordered]@{
+	ManifestUrl = $defaultManifestUrl
+} | ConvertTo-Json
+Set-Content -Path $sourceUpdateSettingsPath -Value $sourceUpdateSettings -Encoding UTF8
+
+$sourceManifest = [ordered]@{
+	Version = $Version
+	DownloadUrl = $defaultDownloadUrl
+	Notes = "Rechnung Version $Version auf GitHub Releases."
+} | ConvertTo-Json
+Set-Content -Path $sourceUpdateManifestPath -Value $sourceManifest -Encoding UTF8
+
+Write-Host "Update ayarları yazıldı: $bundledUpdateSettingsPath" -ForegroundColor Green
+Write-Host "Kaynak update ayarı güncellendi: $sourceUpdateSettingsPath" -ForegroundColor Green
+Write-Host "Kaynak manifest güncellendi: $sourceUpdateManifestPath" -ForegroundColor Green
 
 if (-not $BuildInstaller) {
 	Write-Host "Installer derlenmedi. Inno Setup ile oluşturmak için -BuildInstaller kullanın." -ForegroundColor Yellow
@@ -106,12 +131,13 @@ $issPath = Join-Path $scriptRoot "Örnek.iss"
 Write-Host "Installer derleniyor..." -ForegroundColor Cyan
 & $innoCompiler $issPath "/DMyAppPublishDir=$publishFullPath" "/DMyAppVersion=$Version" "/DMyAppSetupOutDir=$installerOutputDir"
 
-$setupFileName = "Rechnung-Setup-$Version.exe"
-$downloadUrl = if ([string]::IsNullOrWhiteSpace($UpdateBaseUrl)) { $setupFileName } else { ($UpdateBaseUrl.TrimEnd('/') + '/' + $setupFileName) }
+$downloadUrl = $defaultDownloadUrl
 $manifest = [ordered]@{
 	version = $Version
+	tag = $releaseTag
+	setupFile = $setupFileName
 	downloadUrl = $downloadUrl
-	notes = "Rechnung sürüm $Version paketi."
+	notes = "Rechnung Version $Version auf GitHub Releases."
 } | ConvertTo-Json
 Set-Content -Path $updateManifestPath -Value $manifest -Encoding UTF8
 

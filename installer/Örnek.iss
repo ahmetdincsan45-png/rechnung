@@ -42,6 +42,7 @@ VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription=Rechnung Rechnungsprogramm Setup
 VersionInfoProductName={#MyAppName}
 WizardImageStretch=no
+UninstallDisplayName={#MyAppName}
 
 [Languages]
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
@@ -60,3 +61,12 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+	MsgBox('Benutzerdaten und Archivinhalte wurden nicht gelöscht.', mbInformation, MB_OK);
+  end;
+end;

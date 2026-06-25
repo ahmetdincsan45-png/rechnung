@@ -1,5 +1,5 @@
-{
-  "Version": "1.0.0",
-  "DownloadUrl": "https://example.com/rechnung/downloads/RechnungSetup.exe",
-  "Notes": "Erste veröffentlichte Version. Ersetzen Sie diese URLs vor der Auslieferung mit Ihren echten öffentlichen Adressen."
+﻿{
+    "Version":  "1.0.2",
+    "DownloadUrl":  "https://github.com/ahmetdincsan45-png/rechnung/releases/download/v1.0.2/Rechnung-Setup-1.0.2.exe",
+    "Notes":  "Rechnung Version 1.0.2 auf GitHub Releases."
 }

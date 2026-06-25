@@ -1,40 +1,55 @@
-# Installer Akışı
+# Installer und GitHub Release-Ablauf
 
-Bu klasör, uygulamayı publish edip kurulum paketi üretmek için gereken dosyaları içerir.
+Dieser Ordner enthält den Ablauf, um Rechnung zu veröffentlichen, ein Setup zu erzeugen und die Update-Dateien mit GitHub Releases kompatibel zu halten.
 
-## Hızlı kullanım
+## Schnellstart
 
-1. Publish al:
+1. Publish erstellen:
 	- `powershell -ExecutionPolicy Bypass -File .\installer\publish-installer.ps1`
-2. Inno Setup kuruluysa setup üret:
+2. Setup erstellen:
 	- `powershell -ExecutionPolicy Bypass -File .\installer\publish-installer.ps1 -BuildInstaller -AutoIncrementVersion`
-3. En kolay yol:
-   - `installer\Oluştur-Setup.bat` dosyasını çift tıklayın
+3. Einfachster Weg:
+	- `installer\Oluştur-Setup.bat` doppelklicken
 
-## Çıktılar
+## Ausgabeordner
 
-- Publish klasörü: `installer\artifacts\publish`
-- Setup klasörü: `installer\artifacts\setup`
-- Güncelleme manifesti: `installer\artifacts\setup\latest.json`
+- Publish: `installer\artifacts\publish`
+- Setup: `installer\artifacts\setup`
+- Release-Manifest: `installer\artifacts\setup\latest.json`
 
-## Profesyonel kullanım önerisi
+## GitHub Release-Ablauf
 
-- Otomatik patch artırarak setup üretin:
+1. Neue Version erzeugen:
 	- `powershell -ExecutionPolicy Bypass -File .\installer\publish-installer.ps1 -BuildInstaller -AutoIncrementVersion`
-- İsterseniz manuel sürüm de verebilirsiniz:
-	- `powershell -ExecutionPolicy Bypass -File .\installer\publish-installer.ps1 -BuildInstaller -Version 1.2.0`
-- Son kullanılan sürüm `installer\version.txt` içinde tutulur.
-- Oluşan setup adı sürümü içerir:
-	- `Rechnung-Setup-1.0.1.exe`
-- İsterseniz yayın adresi de verebilirsiniz:
-	- `powershell -ExecutionPolicy Bypass -File .\installer\publish-installer.ps1 -BuildInstaller -AutoIncrementVersion -UpdateBaseUrl https://example.com/downloads`
-- Bu durumda `latest.json` içindeki indirme bağlantısı tam URL olarak yazılır.
-- Aynı anda publish çıktısına `update-settings.json` da eklenir; uygulama açılışta bu dosyadan `latest.json` adresini otomatik okur.
+2. Das erzeugte Setup hochladen:
+	- Datei: `Rechnung-Setup-X.Y.Z.exe`
+3. Auf GitHub einen Release mit passendem Tag anlegen:
+	- Tag-Format: `vX.Y.Z`
+4. Das Setup als Release Asset hochladen.
+5. Die aktualisierten Dateien committen und pushen:
+	- `Örnek/update-settings.json`
+	- `Örnek/updates/update-manifest.json`
 
-## Dosyalar
+## Wichtige Hinweise
 
-- `publish-installer.ps1` - publish ve isteğe bağlı setup üretimi
-- `Oluştur-Setup.bat` - tek tıkla Setup.exe üretimi
-- `Örnek.iss` - Inno Setup tanımı
-- `install.ps1` - script tabanlı alternatif yerel kurulum
-- `uninstall.ps1` - script tabanlı alternatif kaldırma
+- Die Versionsnummer wird in `installer\version.txt` geführt.
+- Das Setup heißt immer:
+	- `Rechnung-Setup-X.Y.Z.exe`
+- Das Setup und App-Updates enthalten nur Programmdateien.
+- Kundendaten, alte Rechnungen, Archivpfade und andere Benutzerinhalte bleiben pro Computer getrennt in den Benutzerordnern gespeichert.
+- Eine neue Installation auf einem anderen Computer startet deshalb ohne Ihre lokalen Inhalte.
+- Der Publish-Script erzeugt automatisch:
+	- die gebündelte `update-settings.json`
+	- die Quell-Datei `Örnek/update-settings.json`
+	- die Quell-Datei `Örnek/updates/update-manifest.json`
+	- das Release-Manifest `installer\artifacts\setup\latest.json`
+- Bei einer Deinstallation werden nur die installierten Programmdateien entfernt; Benutzerinhalte bleiben erhalten.
+- Das GitHub-Repo ist fest auf `ahmetdincsan45-png/rechnung` ausgerichtet.
+
+## Dateien
+
+- `publish-installer.ps1` - Publish, Setup und Manifest-Aktualisierung
+- `Oluştur-Setup.bat` - einfacher Start des Setup-Builds
+- `Örnek.iss` - Inno Setup Definition
+- `install.ps1` - alternatives lokales Installationsskript
+- `uninstall.ps1` - alternatives lokales Deinstallationsskript

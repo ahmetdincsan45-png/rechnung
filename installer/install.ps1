@@ -21,3 +21,4 @@ $shortcut.Save()
 
 Write-Host 'Kurulum tamamlandı.'
 Write-Host "Uygulama klasörü: $targetDir"
+Write-Host 'Kullanıcı verileri ayrı tutulur ve AppData klasörlerinde korunur.'
